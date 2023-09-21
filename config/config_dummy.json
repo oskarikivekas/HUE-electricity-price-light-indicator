@@ -1,0 +1,6 @@
+{
+    "secrets": [
+        {"hue-application-key": "Your_hue_application_key"},
+        {"bridge_xxx_ip_address": "192.168.1.xxx"}
+    ]
+}

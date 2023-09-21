@@ -18,7 +18,7 @@ def main():
         for secret in config_data.get('secrets', []):
             if 'hue-application-key' in secret:
                 api_key = secret['hue-application-key']
-            elif 'jkaari-bridge-ip' in secret:
+            elif 'bridge-ip' in secret:
                 bridge_ip = secret['jkaari-bridge-ip']
     
 

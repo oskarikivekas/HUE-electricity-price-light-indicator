@@ -10,6 +10,7 @@ def get_electricity_price_just_now():
 
     if response.status_code == 200:
         data = response.json()
-        return print(data["PriceWithTax"])
+        return float(data["PriceWithTax"])
     else:
         return False
+    

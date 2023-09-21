@@ -76,6 +76,20 @@ class HueBridge:
             return True
         else:
             return False
+        
+    def set_light_with_payload(self, light_id, payload):
+        endpoint = f"{self.RESOURCES}/light/{light_id}"
+        headers = {
+            'hue-application-key': self.API_KEY,
+            'content-type': "application/json"
+        }
+        response = requests.put(endpoint, json=payload,
+                                headers=headers, verify=not ssl_disabled)
+
+        if response.status_code == 200:
+            return True
+        else:
+            return False
 
 
 # maybe a bit inverse relationship but it works. Each light obtains its bridge so its easier to 
@@ -98,6 +112,42 @@ class HueLight:
         if self.bridge:
             return self.bridge.turn_off_light(self.light_id)
 
-    #
-    def set_multiple_light_options(self, brightness=None, color=None,color_temperature=None):
+
+    def set_multiple_light_options(self, brightness=0, color=None, color_temperature=0):
         
+        data = {
+            "dimming": {
+                "brightness": brightness
+                },
+            "color": {
+                "xy": {"x":color[0], "y":color[1]}
+                }
+            }
+            # "color_temperature": {
+            #     "mirek": {color_temperature}
+            #     }
+        return self.bridge.set_light_with_payload(self.light_id, data) 
+    
+    def set_color_match_price(self, electricity_price):
+        if electricity_price <= 0.05:
+            print(f"Price is : {electricity_price}€, light is set to: Light blue")
+            return self.set_multiple_light_options(brightness=80, color=[0.16, 0.06])
+        elif 0.06 <= electricity_price <= 0.10:
+            print(f"Price is : {electricity_price}€, light is set to:  Green")
+            return self.set_multiple_light_options(brightness=80, color=[0.214, 0.709])
+        elif 0.11 <= electricity_price <= 0.15:
+            print(f"Price is : {electricity_price}€, light is set to: Light green")
+            return self.set_multiple_light_options(brightness=80, color=[0.299, 0.588])
+        elif 0.16 <= electricity_price <= 0.20:
+            print(f"Price is : {electricity_price}€, light is set to: Yellow")
+            return self.set_multiple_light_options(brightness=80, color=[0.567, 0.431])
+        elif 0.21 <= electricity_price <= 0.25:
+            print(f"Price is : {electricity_price}€, light is set to: Orange")
+            return self.set_multiple_light_options(brightness=80, color=[0.569, 0.414])
+        elif 0.26 <= electricity_price <= 0.35:
+            print(f"Price is : {electricity_price}€, light is set to: Light red")
+            return self.set_multiple_light_options(brightness=80, color=[0.675, 0.322])
+        else:
+            print(f"Price is : {electricity_price}€, light is set to: Really red")
+            return self.set_multiple_light_options(brightness=80, color=[0.698, 0.31])
+    
